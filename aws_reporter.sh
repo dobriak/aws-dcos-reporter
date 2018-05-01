@@ -5,10 +5,7 @@ private_agents=""
 master="leader.mesos"
 function get_token() {
   if [ ! -f token ]; then
-    #Get token
-    #token=$(curl --silent -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"uid":"'${SU_USR}'","password":"'${SU_PWD}'"}' http://${master}/acs/api/v1/auth/login | jq -r ".token")
-    #echo ${token} > token
-    ./get_token.sh 
+    ./get_token.sh
   else
     token=$(cat token)
   fi
@@ -70,11 +67,13 @@ while true; do
     report_percent_usage
   )
   status=$?
-  if [ ${status} = 22 ]; then
-    rm token
-    get_token
-  else
-    exit ${status}
+  if [ ${status} != 0 ]; then
+    if [ ${status} = 22 ]; then
+      rm token
+      get_token
+    else
+      exit ${status}
+    fi
   fi
   sleep 1m
 done
