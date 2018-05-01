@@ -12,12 +12,12 @@ AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
 AWS_DEFAULT_REGION
 ```
-Also, for authentication against the DC/OS APIs, please supply username and password (service account coming very soon):
+Also, for authentication against the DC/OS APIs, please supply your service account name and private key secret.
 ```bash
-SU_USR
-SU_PWD
+SA_NAME
+SA_SECRET
 ```
-You can build and use your image based on the supplied `Dockerfile` or re-use the one that comes with this repository: `dobriak/aws-rep:0.0.1`.
+You can build and use your image based on the supplied `Dockerfile` or re-use the one that comes with this repository: `dobriak/aws-rep:0.0.4`.
 
 Here is how you can make use of the reported data to trigger events for your autoscaling groups:
 
@@ -54,3 +54,4 @@ LoadAverage15m
 PercentUsedMem
 ```
 
+For a walk-through of creating a service account and spinning up a Marathon app to deploy this functionality, please visit my [blog post](https://dobriak.github.io/post/autoscaling-reporter/).

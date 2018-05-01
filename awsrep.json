@@ -1,0 +1,69 @@
+{
+  "id": "/monitoring/awsrep",
+  "backoffFactor": 1.15,
+  "backoffSeconds": 1,
+  "container": {
+    "type": "DOCKER",
+    "volumes": [],
+    "docker": {
+      "image": "dobriak/aws-rep:0.0.4",
+      "forcePullImage": false,
+      "privileged": false,
+      "parameters": []
+    }
+  },
+  "cpus": 0.4,
+  "disk": 0,
+  "env": {
+    "SA_SECRET": {
+      "secret": "secret0"
+    },
+    "AWS_ACCESS_KEY_ID": {
+      "secret": "secret1"
+    },
+    "AWS_DEFAULT_REGION": {
+      "secret": "secret2"
+    },
+    "AWS_SECRET_ACCESS_KEY": {
+      "secret": "secret3"
+    },
+    "SA_NAME": "reporter"
+  },
+  "instances": 1,
+  "maxLaunchDelaySeconds": 3600,
+  "mem": 128,
+  "gpus": 0,
+  "networks": [
+    {
+      "mode": "host"
+    }
+  ],
+  "portDefinitions": [],
+  "requirePorts": false,
+  "secrets": {
+    "secret0": {
+      "source": "pk_reporter"
+    },
+    "secret1": {
+      "source": "AWS_ACCESS_KEY_ID"
+    },
+    "secret2": {
+      "source": "AWS_DEFAULT_REGION"
+    },
+    "secret3": {
+      "source": "AWS_SECRET_ACCESS_KEY"
+    }
+  },
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 1
+  },
+  "killSelection": "YOUNGEST_FIRST",
+  "unreachableStrategy": {
+    "inactiveAfterSeconds": 0,
+    "expungeAfterSeconds": 0
+  },
+  "healthChecks": [],
+  "fetch": [],
+  "constraints": []
+}
