@@ -1,18 +1,18 @@
 # AWS DC/OS CloudWatch Data Reporter
 
-AWS CloudWatch data reporter based on AWS CLI and DC/OS metrics data. 
+AWS CloudWatch data reporter based on AWS CLI and DC/OS metrics data.
 
 Simple implementation based on a docker container instance running anywhere on your DC/OS cluster. Data is gathered via simple curl API calls to the DC/OS metrics service. Data is pushed to CloudWatch via AWS CLI calls.
-The supplied script queries the metrics APIs and reports data once per minute (normal resolution metric). Feel free to modify the data being sent, along with any aditional dimensions you might want to track.
+The supplied script queries the metrics APIs and reports data once per minute (normal resolution metric). Feel free to modify the data being sent, along with any additional dimensions you might want to track.
 
 In order for this to work, you will have to create the following secrets and attach them to your docker instance:
 
 ```bash
 AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
-AWS_DEFAULT_REGION 
+AWS_DEFAULT_REGION
 ```
-Also, for authentication against the DC/OS APIs, please supply username and password (service account comming very soon):
+Also, for authentication against the DC/OS APIs, please supply username and password (service account coming very soon):
 ```bash
 SU_USR
 SU_PWD

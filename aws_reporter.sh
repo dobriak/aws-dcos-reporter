@@ -1,20 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 # To be run under a service account in DC/OS
-set -ex
+set -x
 private_agents=""
 master="leader.mesos"
 function get_token() {
   if [ ! -f token ]; then
     #Get token
-    token=$(curl --silent -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"uid":"'${SU_USR}'","password":"'${SU_PWD}'"}' http://${master}/acs/api/v1/auth/login | jq -r ".token")
-    echo ${token} > token
+    #token=$(curl --silent -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"uid":"'${SU_USR}'","password":"'${SU_PWD}'"}' http://${master}/acs/api/v1/auth/login | jq -r ".token")
+    #echo ${token} > token
+    ./get_token.sh 
   else
     token=$(cat token)
   fi
 }
 
 function get_private_agents() {
-  curl --silent -X GET -H "Authorization: token=${token}" http://${master}/mesos/slaves > slaves.json
+  curl -f --silent -X GET -H "Authorization: token=${token}" http://${master}/mesos/slaves > slaves.json
   for row in $(cat slaves.json | jq -r '.slaves[] | @base64'); do
     _jq() {
       echo ${row} | base64 -d | jq -r ${1}
@@ -31,7 +32,7 @@ function get_private_agents() {
 function get_metrics() {
   # Agent ID
   for id in ${private_agents}; do
-    curl --silent -X GET -H "Authorization: token=${token}" http://${master}/system/v1/agent/${id}/metrics/v0/node > metrics-${id}.json
+    curl -f --silent -X GET -H "Authorization: token=${token}" http://${master}/system/v1/agent/${id}/metrics/v0/node > metrics-${id}.json
   done
 }
 
@@ -60,11 +61,20 @@ function report_percent_usage() {
 }
 
 # Main
+get_token
 while true; do
-  get_token
-  get_private_agents
-  get_metrics
-  report_metrics
-  report_percent_usage
+  (
+    get_private_agents
+    get_metrics
+    report_metrics
+    report_percent_usage
+  )
+  status=$?
+  if [ ${status} = 22 ]; then
+    rm token
+    get_token
+  else
+    exit ${status}
+  fi
   sleep 1m
 done
