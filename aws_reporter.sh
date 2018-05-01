@@ -1,12 +1,11 @@
 #!/bin/bash
 # To be run under a service account in DC/OS
-set -x
+set -o pipefail
 private_agents=""
 master="leader.mesos"
 function get_token() {
   if [ ! -f token ]; then
     ./get_token.sh
-  else
     token=$(cat token)
   fi
 }
